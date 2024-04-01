@@ -1,0 +1,213 @@
+1.Create table custvehicle
+    -> (tid int not null,custid int not null, vid int not null,sid int not null,buy_price int not null,constraint pk_tid primary key(tid),constraint bpprice check(buy_price>0)) ;
+
+insert into custvehicle
+values(1,1,1,10,75000),(2,1,2,10,790000),(3,2,3,11,80000),(4,3,3,11,75000),(5,3,2,10,800000);
+
+mysql> select *
+    -> from custvehicle;
++-----+--------+-----+-----+-----------+
+| tid | custid | vid | sid | buy_price |
++-----+--------+-----+-----+-----------+
+|   1 |      1 |   1 |  10 |     75000 |
+|   2 |      1 |   2 |  10 |    790000 |
+|   3 |      2 |   3 |  11 |     80000 |
+|   4 |      3 |   3 |  11 |     75000 |
+|   5 |      3 |   2 |  10 |    800000 |
++-----+--------+-----+-----+-----------+
+
+
+2. Add new column by name rating with number data type in cust_vehicle table.
+
+ alter table custvehicle
+    -> add column rating int;
+
+ select *
+    -> from custvehicle;
++-----+--------+-----+-----+-----------+--------+
+| tid | custid | vid | sid | buy_price | rating |
++-----+--------+-----+-----+-----------+--------+
+|   1 |      1 |   1 |  10 |     75000 |   NULL |
+|   2 |      1 |   2 |  10 |    790000 |   NULL |
+|   3 |      2 |   3 |  11 |     80000 |   NULL |
+|   4 |      3 |   3 |  11 |     75000 |   NULL |
+|   5 |      3 |   2 |  10 |    800000 |   NULL |
++-----+--------+-----+-----+-----------+--------+
+5 rows in set (0.00 sec)
+
+
+3. Give rating 5 to all the vehicles with price greater than 90000.
+update custvehicle
+    -> set rating=5
+    -> where buy_price>90000;
+
+ select *
+    -> from custvehicle;
++-----+--------+-----+-----+-----------+--------+
+| tid | custid | vid | sid | buy_price | rating |
++-----+--------+-----+-----+-----------+--------+
+|   1 |      1 |   1 |  10 |     75000 |   NULL |
+|   2 |      1 |   2 |  10 |    790000 |      5 |
+|   3 |      2 |   3 |  11 |     80000 |   NULL |
+|   4 |      3 |   3 |  11 |     75000 |   NULL |
+|   5 |      3 |   2 |  10 |    800000 |      5 |
++-----+--------+-----+-----+-----------+--------+
+
+
+4. Make vid custid and sid as primary keys in their respective table.
+
+ alter table customer
+    -> add constraint pkcustid primary key(custid);
+	+----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| custid   | int         | NO   | PRI | NULL    |       |
+| cname    | varchar(30) | YES  |     | NULL    |       |
+| location | varchar(20) | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+
+ alter table vehicle
+    -> add constraint pkvid primary key (vid);
+
+alter table saleman
+    -> add constraint pksid primary key(sid);
+	describe salesman;
++------------+-------------+------+-----+---------+-------+
+| Field      | Type        | Null | Key | Default | Extra |
++------------+-------------+------+-----+---------+-------+
+| sid        | int         | NO   | PRI | NULL    |       |
+| sname      | varchar(15) | YES  |     | NULL    |       |
+| city       | varchar(12) | YES  |     | NULL    |       |
+| experience | int         | YES  |     | NULL    |       |
++------------+-------------+------+-----+---------+-------+
+
+5. Display tid,custid,customer name and buy_price.
+
+select custvehicle.tid,custvehicle.custid,customer.cname,custvehicle.buy_price from custvehicle,customer,vehicle,
+salesman
+    -> where custvehicle.custid=customer.custid and custvehicle.sid=salesman.sid and custvehicle.vid=vehicle.vid;
++-----+--------+--------+-----------+
+| tid | custid | cname  | buy_price |
++-----+--------+--------+-----------+
+|   1 |      1 | nilima |     75000 |
+|   2 |      1 | nilima |    790000 |
+|   3 |      2 | ganesh |     80000 |
+|   4 |      3 | kishor |     75000 |
+|   5 |      3 | kishor |    800000 |
++-----+--------+--------+-----------+
+
+6. Dispaly tid,custid,customer name,vid,vehicle name, Sid, salesmen name and buy _ price for vehicle.
+
+select custvehicle.tid,custvehicle.custid,customer.cname,custvehicle.buy_price,vehicle.vid,salesman.sname,
+vehicle.vname,salesman.sid
+from custvehicle,customer,vehicle,salesman
+where custvehicle.custid=customer.custid and custvehicle.sid=salesman.sid and custvehicle.vid=vehicle.vid;
+
+
+
+
+7. Create empty table emplO with table structure same as emp table.
+
+ create table emp10
+    -> as
+    -> select *
+    -> from emp;
+
+
+
+
+9. add new column in emplO table netsal with constraint default 1000
+
+ alter table emp10
+    -> add netsal int default(1000);
+
+
+
+10.Update employee sal increase sal of each employee by 15 % sal +comm,
+
+update emp10
+set sal=sal+sal*0.15+ifnull (comm,0);
+
+
+
+11. change job of smith to senior clerk
+
+
+ update emp10
+    -> set job='sclerk'
+    -> where ename='smith';
+
+
+12. increase salary of all employees by 15% if they are earning some commission.
+
+select sal+(sal*0.15) as "update salary"
+from emp10
+where comm is not null;
+
+
+
+13. Display all rows with salary starting from 500 till 2000
+
+select *
+from emp
+where sal>500 and sal<2000;
+
+
+14. Display all rows with salary 1250, 3350, 1350
+
+
+     select sal
+    -> from emp10
+    -> where sal in(2837.50,3450.00,1495.00);
+
+
+
+15. To list all records with sal > 2000 and comm>200
+
+
+select *
+from emp10
+where sal>2000 and ifnull(comm,0)>200;
+
+
+16. To list all record with job='Clerk' or sal>2000
+
+select *
+from emp10
+where job='clerk';
+
+
+17. To list all the record with sal=1250 or 1100
+
+select *
+    -> from emp10
+    -> where sal in(1250,1100);
+
+
+18. To list all employees with sal>1250 and <2850
+
+select *
+from emp10
+where sal between 1250 and 2850;
+
+
+19. To list all employees with sal not >1250 and <2850
+
+	select *
+    	from emp10
+    	where sal<1250 or sal>2850;
+
+
+20. Retrieve the details (Name, Salary and dept no) of the emp who are working in department code 20
+
+
+	 select ename,sal,deptno
+     	 from emp10
+     	 where deptno=20;
+
+
+21. Display the total salary of all employees . Total salary will be calculated as sal+comm+sal*O.10
+
+select sal+(sal*0.10)+ifnull(comm,0) as "total salary"
+from emp10;
+ 
