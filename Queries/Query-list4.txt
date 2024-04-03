@@ -1,0 +1,220 @@
+1. Display all rows where comm is null.
+ 	select *
+      from emp
+    	where comm is null;
+
+
+2. Display all employees where comm is null and name starts with 's';
+select * 
+from emp
+where comm is null and ename like's%';
+
+
+3. Display empno, name and department number of an emp working under manager with id 7698.
+select empno,ename,deptno,mgr
+from emp
+where mgr=7698;
+
+
+
+4. Display all employees who earn sal more that smith earns.
+select *
+from emp
+where sal >(select sal
+		from emp
+		where ename='smith');
+
+
+
+5. Display all employees who are working in smith's department
+select *
+from emp
+where deptno =(select deptno
+		   from emp
+		  where ename='smith');
+
+
+
+
+6. Display all employees who earn salary < Scott earns and salary > Adams sal.
+select *
+from emp
+where sal<(select sal
+		from emp
+		where ename='scott')and sal>
+		(select sal
+		from emp
+		where ename='adams');
+
+7. Display all employees with salary > either Smith's salary or allen's sal
+select *
+from emp
+where sal>any(select sal
+		from emp
+		where ename like 'smith' or 'allen');
+		
+		
+		
+8. Display all employees who earn more than average sal of dept 10.
+select *
+from emp
+where sal>(select avg(sal)
+		from emp
+		where deptno=10);
+
+
+
+9. Display all employees who are working in Accounts department.
+select *
+from emp
+where deptno=(select deptno
+		 from dept
+		 where dname='accounting');
+			
+
+10. Display deptno, salary and for all employees who are managers.
+select deptno,sal
+from emp
+where job like 'manager';
+
+
+11. Find sum(sal) for each dept having more than 2 analyst.
+select sum(sal),count(*)
+from emp
+where job='analyst'>2
+group by deptno; 
+
+
+12. Calculate how many employees earn sal more than 1500 in each dept.
+select count(*),deptno
+from emp
+where sal>1500
+group by deptno;
+
+13. Display ename,sal and grade of employee(use salgrade table).
+select ename,sal,grade
+from emp,salgrade
+where sal between losal and hisal;
+
+
+14. List all managers working in dept 10.
+select *
+from emp
+where job='manager'and deptno=10;
+
+
+15. List the employees in dept 20 and 30 who did not get any commission.
+select *
+from emp
+where (deptno=20 or deptno=30)and comm is null;
+
+
+16. Display the number of employees who has got the commission.
+select *
+from emp
+where comm>0 and comm is not null;
+
+17. Count number of clerks in dept 10 and 20.
+select count(*),deptno
+from emp
+where job='clerk' and(deptno=10 or deptno=20)
+group by deptno;
+
+
+
+18. List Department wise total salary.
+select sum(sal),deptno
+from emp
+group by deptno;
+
+
+19. List department wise total sal only if the total sal is > 20000.
+select sum(sal),deptno
+from emp
+group by deptno
+having sum(sal)>20000;
+
+
+20. Display job wise sum of salary excluding dept 30 only if the sum salary is > 5000.
+select sum(sal),job
+from emp
+where !(deptno=30)
+group by job
+having sum(sal)>5000;
+
+
+21. Display job wise max sal only for managers, clerks, salesman working in dept IO and 20. Sort the data by des order of the max salary.
+
+select max(sal),job
+from emp
+where (job='manager'or job='clerk' or job='salesman')and deptno in(10,20)
+group by job
+order by max(sal)desc;
+
+
+22. Display job wise number of employees in all the department with total salary > 3000
+select count(*),job
+from emp
+group by job
+having sum(sal)>3000;
+
+23. Display the department number having atleast 4 employees in it.
+select deptno,count(*)
+from emp
+group by deptno
+having count(*)>4;
+
+24. Display the department name having saleman in it.
+select dname
+from dept
+where deptno in(select deptno
+		    from emp
+		    where job='salesman');
+
+25. Display all jobs from emp table.
+select job
+from emp;
+
+
+26. Display ename and it's length for all employees.
+e.g SMITH 5
+select ename,length(ename)
+from emp;
+
+
+27. Display first 3 characters of ename in lower case and rest everything in upper case.
+e.g smiTH
+select ename,concat(lower(substr(ename,1,3)),upper(substr(ename,4,10)))
+from emp;
+
+
+28. Display last 3 letters of name.
+select substr(ename,-3)
+from emp;
+
+
+29. Generate an email-id for all employees and display. Email id is generated as follows
+first 3 letters of name in lower case + last 2 letters of job in lower case + @knowit.com
+eg name=SMlTH job=CLERK
+email-id = smirk@knowit.com
+
+select concat('email id =     ',lower(substr(ename,1,3)),lower(substr(job,-2)),'@knowit.com')
+from emp;
+
+
+30. Increase the salary by 10% in the database for all employees having experience more than 40 years
+
+select sal,floor(datediff(curdate(),hiredate)/365)as experience,sal+(sal*0.10)as 'updatedsallary'
+          from emp
+where floor(datediff(curdate(),hiredate)/365)>40 ;
+
+
+31.write a SQL query to dispaly empno,ename,deptno,dname for those employees whose salary is in the
+range of 1000, and 3000
+(Begin and end values included.).
+From emp table write a SQL query to find those employees whose salary falls within
+the range of the smallest salary and 2500. Return all the fields.
+
+select empno,ename,deptno,dname
+from emp,dept
+where sal between(
