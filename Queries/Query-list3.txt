@@ -1,0 +1,227 @@
+1. Find all employees with name ending with R
+select*
+from emp
+where ename like '%r';
+
+2. Find all employees with name starting with M and ending with R
+select *
+from emp
+where ename regexp '^m.*r$';
+
+or 
+
+select * from emp
+    -> where ename like 'm%%r';
+
+
+3. To find all employees with name starting with either M or A
+select *
+from emp
+where ename like 'm%' or ename like 'a%';
+
+
+4. Find all employees with name having L at 3 rd position
+select *
+from emp
+where ename like '__l%';
+
+
+5. Find all employees with name starting with M has L at 3 rd position and ends with R
+select *
+from emp
+where ename like 'm_l%r' 
+
+
+6. Find all employees with name having L at 3 rd position and E at second last position
+select *
+from emp
+where ename like '__l%%e_';
+
+
+7. List employee names having 'E' as second last but one character?
+select *
+from emp
+where ename like '%e_';
+
+
+8. To find all employees with name starting with either M or A and last character as either R or E
+select *
+from emp
+where ename like 'a%' or ename like 'm%' or ename like '%r' or ename like'%e';
+
+
+9. To list all employees with job containing L at third position and M at third last position
+select *
+from emp
+where job like '__l%%m__';
+
+
+10.To list all employees with job startting with C, E at 3rd position and ending with K
+select *
+from emp
+where job like 'c%_e%%k';
+
+
+II.To list all employees with sal is null and name starts with 'S'
+select *
+from emp
+where sal is null and ename like 's%';
+
+
+
+12.Find all employees with name starting with A and ending with e, or it may starts with s and end with h
+select *
+from emp
+where ename like 'a%%e' or ename like 's%%h';
+
+
+13.Display all employees with sal >IOOO and sal<3000 and job has a at starting position and ends with t.
+select *
+from emp
+where sal in(1000,3000) and job like 'a%%t';
+
+
+14.Write a query display empno, ename, sal , increased sal by 10% and commission for all employees whose name starts with a,m or s
+
+select empno,ename,sal,comm,sal+(sal*0.10)+ifnull(comm,0) as "update salary"
+from emp
+where ename like 'a%' or ename like 'm%' or ename like 's%';
+
+
+15.Select all employee with job is either CLERK or SALESMAN and sal >2000
+select *
+from emp
+where (job like 'clerk' or job like 'salesman') and sal>2000;
+
+
+16.Display all employees whose name starts with A and ends with either n or s, or works in dept 10
+select *
+from emp
+where ename like 'a%' and( ename like '%n' or ename like '%s'or deptno=10);
+
+
+17.Display all employees who works in either dept 10 or 30 or joined in year 1982
+select *
+from emp
+where (deptno=10 or deptno=30) and (hiredate between '1982-01-01' and '1982-12-31');
+
+
+18.There is a salary hike by 20% . Display the information from emp table as empno,ename,sal,new sal
+
+select empno,ename,sal,sal+(sal*0.2) as "new sal"
+from emp;
+
+
+
+19.Find all employees whose sal is divisible by 3
+select *
+from emp
+where (sal%3=0);
+
+
+20.List all the clerks and analysts with salary atleast 1000 in dept 20 and 30
+
+select *
+from emp
+where sal>=1000 and (deptno=20 or deptno=30)and (job like 'clerk' or job like 'analyst');
+
+
+
+21 List the employees in dept 20 and 30 who get no commission?
+select *
+from emp
+where (deptno=20 or deptno=30)and comm is null;
+
+
+22.List employees whose name starts with either IA' or 'S' in dept 20?
+select *
+from emp
+where (ename like 'ia%' or ename like 's%')and deptno=20;
+
+
+23.List all the employee whose name does not end with 'S' in dept 20 and 30?
+select *
+from emp
+where !(ename like '%s')and (deptno=20 or deptno=30);
+
+
+24.List the employees who are getting some commision with sal > 1500 in dept 30?
+select *
+from emp
+where deptno=30 and sal>1500 and comm>0;
+
+
+
+25.List emp working as managers and clerks with Salary atleast 2000 except in dept IO and 20?
+select *
+from emp
+where (job like 'manager' or job like 'clerk')and sal>2000 and !(deptno=10 or deptno=20);
+
+
+
+
+26.List employees in all dept whose salary not in the range of 2000 to 3000 with the job which is having a
+string called 'MAN'
+select *
+from emp
+where !(sal between 2000 and 3000) and job like '%man%';
+
+
+
+27.Display dept names which are having letter 'O'?
+select *
+from dept
+where dname like '%o%';
+
+
+28.Display the output as shown below,
+Scott working as a clerk earns 3000 in dept 20?
+select concat(lower(ename),' working as a ',lower(job),' earns ',sal,' in ',deptno)
+from emp
+where ename like 'scott';
+
+
+29. Display average salary for deptno 10 in emp table.
+select avg(sal),deptno
+from emp
+where deptno=10;
+
+
+30. Display maximum salaries of all departments along with respective deptno.
+select max(sal),deptno
+from emp
+group by deptno;
+
+
+31. Display number of employees working in each dept.
+select count(empno),deptno
+from emp
+group by deptno;
+
+32. Dispaly deptno and the count of employees working in it if there are more than 3 employees working in
+the department.
+select deptno,count(empno)
+from emp
+group by deptno
+having count(empno>3);
+
+
+33. Display count of managers working in the company.
+select count(job)
+from emp
+where job='manager';
+
+
+34. Display number of managers, programmers, analyats, clerks working in the company.
+select job,count(job)
+from emp
+where job='manager' or job='programmer' or job='analyst'or job='clerk'
+group by job;
+
+
+35. Display the list of jobs if there are more than 3 employees assigned to that job.
+
+select job,count(*)
+from emp
+group by job
+having count(*)>3;
